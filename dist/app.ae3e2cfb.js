@@ -4926,7 +4926,7 @@ function () {
 
 exports.default = AssetLoader;
 },{"./ObjLoader":"../src/jirachi/loaders/ObjLoader.ts"}],"../src/frag.glsl":[function(require,module,exports) {
-module.exports = "precision highp float;\n#define GLSLIFY 1\n\nuniform float mixRatio;\nuniform float threshold;\nuniform sampler2D tDiffuse1;\nuniform sampler2D tDiffuse2;\nuniform sampler2D tMixTexture;\n\nin vec2 vUv;\n\nout vec4 glFragColor;\nvoid main(){\n\n    vec4 texel1 = texture( tDiffuse1, vUv );\n\tvec4 texel2 = texture( tDiffuse2, vUv );\n    vec4 mixTexture = texture(tMixTexture,vUv);\n\n    vec4 transitionTexel = texture( tMixTexture, vUv );\n\tfloat r = mixRatio * (1.0 + threshold * 2.0) - threshold;\n    float mixf=clamp((transitionTexel.r - r)*(1.0/threshold), 0.0, 1.0);\n\n    glFragColor = mix(texel1,texel2,mixf);\n\n}";
+module.exports = "precision highp float;\n#define GLSLIFY 1\n\nuniform float mixRatio;\nuniform float threshold;\nuniform sampler2D tDiffuse1;\nuniform sampler2D tDiffuse2;\nuniform sampler2D tMixTexture;\n\nin vec2 vUv;\n\nout vec4 glFragColor;\nvoid main(){\n\n    vec4 texel1 = texture( tDiffuse1, vUv );\n\tvec4 texel2 = texture( tDiffuse2, vUv );\n    vec4 mixTexture = texture(tMixTexture,vUv);\n\n    vec4 transitionTexel = texture( tMixTexture, vUv );\n\tfloat r = mixRatio * (1.0 + threshold * 2.0) - threshold;\n    float mixf=clamp((transitionTexel.r - r)*(1.0/threshold), 0.0, 1.0);\n\n    //glFragColor = vec4(threshold,mixRatio,0.0,1.);\n    glFragColor = mix(texel1,texel2,mixf);\n\n}";
 },{}],"../src/jirachi/shaders/plane.vert":[function(require,module,exports) {
 module.exports = "#define GLSLIFY 1\n/**\n Default vertex shader for full screen quad\n */\n\nin vec2 position;\nout vec2 vUv;\nout vec2 vPosition;\nconst vec2 scale = vec2(0.5,0.5);\n\n void main(){\n     vPosition = position;\n     vUv = position.xy * scale + scale;\n     gl_Position = vec4(position,0.0,1.0);\n }";
 },{}],"../src/jirachi/core/vbo.ts":[function(require,module,exports) {
@@ -12696,7 +12696,7 @@ AssetLoader_1.default.loadImageAssets([img, img2, transitionImage]).then(functio
 
   setTimeout(function (e) {
     animate();
-  }, 1000);
+  }, 1400);
 }); // =========== ANIMATE ============= //
 
 function animate() {
@@ -12705,11 +12705,13 @@ function animate() {
   tex.bind();
   tex2.bind(1);
   transitionTex.bind(2);
-  shader.uniform("thresold", settings.textureThreshold.Threshold);
-  shader.int("tDiffuse1", 0);
-  shader.int("tDiffuse2", 1);
-  shader.int("tMixTexture", 2);
-  mesh.draw();
+  mesh.draw(); //console.log(settings.textureThreshold.Threshold);
+
+  mesh.shader.float("threshold", settings.textureThreshold.Threshold);
+  mesh.shader.float("mixRatio", settings.transition.Transition);
+  mesh.shader.int("tDiffuse1", 0);
+  mesh.shader.int("tDiffuse2", 1);
+  mesh.shader.int("tMixTexture", 2);
 }
 },{"./jirachi/core/gl":"../src/jirachi/core/gl.ts","./jirachi/core/shader":"../src/jirachi/core/shader.ts","./jirachi/core/texture":"../src/jirachi/core/texture.ts","./jirachi/core/formats":"../src/jirachi/core/formats.ts","./jirachi/loaders/AssetLoader":"../src/jirachi/loaders/AssetLoader.ts","./frag.glsl":"../src/frag.glsl","./jirachi/shaders/plane.vert":"../src/jirachi/shaders/plane.vert","./jirachi/framework/mesh":"../src/jirachi/framework/mesh.ts","controlkit":"../node_modules/controlkit/index.js","../public/m60.jpg":"m60.jpg","../public/thermal.jpg":"thermal.jpg","../public/transition.png":"transition.png"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -12739,7 +12741,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57418" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52986" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -93,11 +93,10 @@ AssetLoader.loadImageAssets([img,img2,transitionImage]).then(e => {
         data:e[2]
     }))
 
-
     // delay a bit to allow for texture creation.
     setTimeout(e => {
         animate();
-    },1000)
+    },1400)
 
 })
 // =========== ANIMATE ============= //
@@ -108,16 +107,19 @@ function animate(){
     gl.clearScreen();
 
 
+    
     tex.bind();
     tex2.bind(1);
     transitionTex.bind(2);
 
     
-    shader.uniform("thresold",settings.textureThreshold.Threshold);
-    shader.int("tDiffuse1",0);
-    shader.int("tDiffuse2",1);
-    shader.int("tMixTexture",2);
 
     mesh.draw();
+    //console.log(settings.textureThreshold.Threshold);
 
+    mesh.shader.float("threshold",settings.textureThreshold.Threshold);
+    mesh.shader.float("mixRatio",settings.transition.Transition);
+    mesh.shader.int("tDiffuse1",0);
+    mesh.shader.int("tDiffuse2",1);
+    mesh.shader.int("tMixTexture",2);
 }

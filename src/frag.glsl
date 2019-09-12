@@ -21,7 +21,7 @@ void main(){
 
 
 
-
+    //glFragColor = vec4(threshold,mixRatio,0.0,1.);
     glFragColor = mix(texel1,texel2,mixf);
 
 }
